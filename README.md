@@ -1,5 +1,5 @@
 
-# A gradle task that uploads your app to www.pgyer.com,让你更方便的上传你的apk到蒲公英
+# A gradle task that uploads your app to www.pgyer.com , 让你更方便的上传你的apk到蒲公英
 
 # 基于Gradle支持Android Studio的蒲公英自动上传task
 
