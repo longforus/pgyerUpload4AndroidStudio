@@ -1,0 +1,42 @@
+project.ext {
+    upload2d = { extension, buildUpdateDescription ->
+        extension.android {
+            //在这里获取: https://www.pgyer.com/doc/view/api#uploadApp
+            String pgyerApiKey = '这里填你的api_key'
+            task upload2Pgyer(group: 'upload2Pgyer', description: 'upload apk to pgyer', dependsOn: rootProject.task('assembleDebug')) {//release修改这里
+                doLast {
+                    applicationVariants.all {
+                        it.outputs.each { out ->
+                            def outputFile = out.outputFile
+                            if (outputFile != null && outputFile.name == 'app-debug.apk') {//release修改这里
+                                logger.log(LogLevel.ERROR, "start up load apk file : ${outputFile.absolutePath}")
+                                def uploadCommand = "curl -F \"file=@${outputFile.absolutePath}\" -F \"_api_key=$pgyerApiKey\" -F \"buildUpdateDescription=$buildUpdateDescription\"  https://www.pgyer.com/apiv2/app/upload"
+                                Runtime runtime = Runtime.getRuntime()
+                                Process p = runtime.exec(uploadCommand)
+                                InputStream fis = p.getInputStream()
+                                InputStreamReader isr = new InputStreamReader(fis)
+                                BufferedReader br = new BufferedReader(isr)
+                                String line = null
+                                logger.log(LogLevel.ERROR, "upload result :")
+                                while ((line = br.readLine()) != null) {
+                                    logger.log(LogLevel.ERROR, line)
+                                    def startStr = "\"buildShortcutUrl\":\""
+                                    int start = line.indexOf(startStr) + startStr.length()
+                                    int end = line.indexOf("\"", start)
+                                    if (start > 0 && end > 0) {
+                                        String sUrl = line.substring(start, end)
+                                        runtime.exec("cmd   /c   start  https://www.pgyer.com/$sUrl")
+                                    }
+                                }
+                                br.close()
+                                isr.close()
+                                fis.close()
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
