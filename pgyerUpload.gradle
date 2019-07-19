@@ -3,7 +3,7 @@ project.ext {
         extension.android {
             //在这里获取: https://www.pgyer.com/doc/view/api#uploadApp
             String pgyerApiKey = '这里填你的api_key'
-            task upload2Pgyer(group: 'upload2Pgyer', description: 'upload apk to pgyer', dependsOn: rootProject.task('assembleDebug')) {//release修改这里
+            task upload2Pgyer(group: 'upload2Pgyer', description: 'upload apk to pgyer', dependsOn: 'assembleDebug') {//release修改这里
                 doLast {
                     applicationVariants.all {
                         it.outputs.each { out ->
