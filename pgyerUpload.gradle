@@ -10,7 +10,8 @@ project.ext {
                             def outputFile = out.outputFile
                             if (outputFile != null && outputFile.name == 'app-debug.apk') {//release修改这里
                                 logger.log(LogLevel.ERROR, "start up load apk file : ${outputFile.absolutePath}")
-                                def uploadCommand = "curl -F \"file=@${outputFile.absolutePath}\" -F \"_api_key=$pgyerApiKey\" -F \"buildUpdateDescription=$buildUpdateDescription\"  https://www.pgyer.com/apiv2/app/upload"
+                                def uploadCommand = "curl -F \"file=@${outputFile.absolutePath}\" -F \"_api_key=$pgyerApiKey\" -F " +
+                                    "\"buildUpdateDescription=$buildUpdateDescription\" -F \"buildInstallType=2\" -F \"buildPassword=123\" https://www.pgyer.com/apiv2/app/upload"
                                 Runtime runtime = Runtime.getRuntime()
                                 Process p = runtime.exec(uploadCommand)
                                 InputStream fis = p.getInputStream()
